@@ -9,6 +9,13 @@ php artisan vendor:publish --tag=shopify-migrations
 php artisan config:cache
 php artisan migrate
 ```
+
+## Run code react app
+```
+npm install
+npm run watch
+```
+
 ## Example Setup Billing
 ```
 # Create a recurring "Demo" plan for $5.00, with 7 trial days, which will be presented on install to the shop and have the ability to issue usage charges to a maximum of $10.00
