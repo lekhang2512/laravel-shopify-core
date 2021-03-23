@@ -16,7 +16,8 @@
         "laravel/tinker": "^2.5",
         "leekhang/repository": "dev-master",
         "leekhang/response": "dev-master",
-        "osiset/laravel-shopify": "^16.0"
+        "osiset/laravel-shopify": "^16.0",
+        "predis/predis": "^1.1"
     },
     "require-dev": {
         "facade/ignition": "^2.5",

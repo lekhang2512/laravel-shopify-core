@@ -26,5 +26,6 @@ Route::middleware(['auth.shopify', 'billable'])->group(function () {
 
     Route::resource('users', UserController::class);
 
-    Route::get('products', 'ProductController@index')->name('shopify-list-product');
+    Route::get('products', 'ProductController@getProducts')->name('shopify-list-product');
+    Route::get('products/count', 'ProductController@getProductsCount')->name('shopify-list-product-count');
 });

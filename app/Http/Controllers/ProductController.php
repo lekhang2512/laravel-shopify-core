@@ -5,28 +5,36 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Transformers\ProductTransformer;
-
+use App\Repositories\ShopifyProducts\ShopifyProductRepository;
 class ProductController extends Controller
 {
-    public function __construct()
+    private $shopifyProductRepo;
+
+    public function __construct(ShopifyProductRepository $shopifyProductRepo)
     {
+        $this->shopifyProductRepo = $shopifyProductRepo;
     }
 
-    public function index(Request $request)
+    public function getProducts(Request $request)
     {
-        $limit = 250;
-        $sinceId = 0;
-        $fields = 'id,title,handle,image';
         $shop = Auth::user();
-        // $request = $shop->api()->rest('GET', '/admin/products/count.json', []);
-        // dd($request['body']['count']);
-        $request = $shop->api()->rest('GET', '/admin/products.json', ['query' => [
-            'limit' => $limit,
-            'since_d' => $sinceId,
-            'fields' => $fields,
-        ]]);
-        $records = collect($request['body']['products']->toArray());
-        $this->setTransformer(new ProductTransformer());
-        return $this->successResponse($records);
+        $params = $request->all();
+        $result = $this->shopifyProductRepo->getProducts($shop, $params);
+        // $this->setTransformer(new ProductTransformer());
+        $productTransformer = \App::make('Darkness\Response\Transformers\OptimusPrime');
+        $products = $productTransformer->transform(collect($result['products']), new ProductTransformer())['data'];
+        $result['products'] = $products;
+        return $this->successResponse($result);
+    }
+
+    public function getProductsCount(Request $request)
+    {
+        try {
+            $shop = Auth::user();
+            $result = $this->shopifyProductRepo->getProductsCount($shop);
+            return $this->successResponse($result);
+        } catch (\Throwable $th) {
+            throw $th;
+        }
     }
 }

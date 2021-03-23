@@ -12,7 +12,7 @@ export const fetchProducts = () => {
         dispatch(fetchProductsRequest())
         client.get('products')
             .then(response => {
-                const products = response.data.data
+                const products = response.data.data.products
                 dispatch(fetchProductsSuccess(products))
             })
             .catch(error => {
